@@ -13,11 +13,19 @@ export default function Edit({ id }: any) {
     if (!form) return <div className="p-6">Cargando...</div>;
 
     const submit = () => {
-        fetch(`/api/organizaciones/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
-        }).then(() => router.visit("/dashboard/organizaciones"));
+      const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (!token) {
+        alert("CSRF token not found");
+        return;
+      }
+      fetch(`/api/organizaciones/${id}`, {
+          method: "PUT",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": token
+          },
+          body: JSON.stringify(form),
+      }).then(() => router.visit("/dashboard/organizaciones"));
     };
 
     return (

@@ -6,6 +6,7 @@ use Laravel\Fortify\Features;
 use App\Models\Organizacion;
 use App\Models\Voluntariado;
 use App\Http\Controllers\OrganizacionController;
+use App\Http\Controllers\VoluntariadoController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
@@ -49,6 +50,12 @@ Route::get('/api/organizaciones/{id}', [OrganizacionController::class, 'show']);
 Route::put('/api/organizaciones/{id}', [OrganizacionController::class, 'update']);
 Route::delete('/api/organizaciones/{id}', [OrganizacionController::class, 'destroy']);
 
+Route::get('/api/voluntariados', [VoluntariadoController::class, 'index']);
+Route::get('/api/voluntariados/{id}', [VoluntariadoController::class, 'show']);
+Route::post('/api/voluntariados', [VoluntariadoController::class, 'store']);
+Route::put('/api/voluntariados/{id}', [VoluntariadoController::class, 'update']);
+Route::delete('/api/voluntariados/{id}', [VoluntariadoController::class, 'destroy']);
+
 Route::middleware(['auth', 'verified'])
     ->prefix('dashboard')
     ->group(function () {
@@ -63,6 +70,17 @@ Route::middleware(['auth', 'verified'])
 
     Route::get('/organizaciones/{id}/edit', fn($id) => Inertia::render(
         'Dashboard/Organizaciones/Edit',
+        ['id' => $id]
+    ));
+
+    Route::get('/voluntariados', fn() => Inertia::render(
+        'Dashboard/Voluntariados/Index'
+    ));
+    Route::get('/voluntariados/create', fn() => Inertia::render(
+        'Dashboard/Voluntariados/Create'
+    ));
+    Route::get('/voluntariados/{id}/edit', fn($id) => Inertia::render(
+        'Dashboard/Voluntariados/Edit',
         ['id' => $id]
     ));
 });

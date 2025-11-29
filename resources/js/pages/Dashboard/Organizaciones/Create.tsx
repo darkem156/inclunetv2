@@ -10,10 +10,16 @@ export default function Create() {
         img: "",
     });
 
-    const submit = () => {
+    const submit = async () => {
+      const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+      if (!token) {
+        alert("CSRF token not found");
+        return;
+      }
         fetch("/api/organizaciones", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": token },
+            credentials: "include",
             body: JSON.stringify(form),
         }).then(() => router.visit("/dashboard/organizaciones"));
     };
